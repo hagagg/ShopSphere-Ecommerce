@@ -1,4 +1,4 @@
-package com.hagag.shopsphere_ecommerce.service;
+package com.hagag.shopsphere_ecommerce.service.impl;
 
 import com.hagag.shopsphere_ecommerce.dto.authentication.AuthResponseDto;
 import com.hagag.shopsphere_ecommerce.dto.authentication.LoginRequestDto;
@@ -11,6 +11,7 @@ import com.hagag.shopsphere_ecommerce.mapper.AuthMapper;
 import com.hagag.shopsphere_ecommerce.repository.UserRepo;
 import com.hagag.shopsphere_ecommerce.security.JwtService;
 import com.hagag.shopsphere_ecommerce.security.UserPrincipal;
+import com.hagag.shopsphere_ecommerce.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

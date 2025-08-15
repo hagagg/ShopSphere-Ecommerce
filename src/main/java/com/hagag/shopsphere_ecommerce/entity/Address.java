@@ -1,6 +1,5 @@
 package com.hagag.shopsphere_ecommerce.entity;
 
-import com.hagag.shopsphere_ecommerce.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -32,10 +31,10 @@ public class Address {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Size(max = 100)
+    @Size(max = 50)
     @NotNull
-    @Column(name = "address_line1", nullable = false, length = 100)
-    private String addressLine1;
+    @Column(name = "street", nullable = false, length = 50)
+    private String street;
 
     @Size(max = 50)
     @NotNull
