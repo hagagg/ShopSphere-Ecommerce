@@ -35,7 +35,6 @@ public class Order {
     @Column(name = "total_amount", nullable = false, precision = 10, scale = 2)
     private BigDecimal totalAmount;
 
-    @Size(max = 20)
     @NotNull
     @ColumnDefault("'PENDING'")
     @Enumerated(EnumType.STRING)
