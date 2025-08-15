@@ -1,0 +1,13 @@
+package com.hagag.shopsphere_ecommerce;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class ShopsphereEcommerceApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ShopsphereEcommerceApplication.class, args);
+	}
+
+}
