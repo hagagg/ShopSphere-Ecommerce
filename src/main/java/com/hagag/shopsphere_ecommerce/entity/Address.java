@@ -51,6 +51,9 @@ public class Address {
     @Column(name = "country", nullable = false, length = 50)
     private String country;
 
+    @Column(name = "is_default", nullable = false)
+    private boolean defaultAddress;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

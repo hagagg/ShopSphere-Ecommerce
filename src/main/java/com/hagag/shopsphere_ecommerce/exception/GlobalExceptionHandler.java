@@ -1,5 +1,6 @@
 package com.hagag.shopsphere_ecommerce.exception;
 
+import com.hagag.shopsphere_ecommerce.exception.custom.ResourceNotFoundException;
 import com.hagag.shopsphere_ecommerce.exception.custom.UnauthorizedActionException;
 import com.hagag.shopsphere_ecommerce.exception.custom.UserAlreadyExistsException;
 import com.hagag.shopsphere_ecommerce.exception.custom.UserNotFoundException;
@@ -58,6 +59,17 @@ public class GlobalExceptionHandler {
                 .message("Unauthorized Action")
                 .details(ex.getMessage())
                 .statusCode(HttpStatus.UNAUTHORIZED.value())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ApiErrorResponse handleResourceNotFound (ResourceNotFoundException ex){
+        return ApiErrorResponse.builder()
+                .success(false)
+                .message("Resource Not Found")
+                .details(ex.getMessage())
+                .statusCode(HttpStatus.NOT_FOUND.value())
                 .timestamp(LocalDateTime.now())
                 .build();
     }

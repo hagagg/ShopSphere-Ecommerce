@@ -17,4 +17,6 @@ public class AddressResponseDto {
 
     private String country;
 
+    private boolean defaultAddress;
+
 }
