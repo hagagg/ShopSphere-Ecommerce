@@ -6,6 +6,7 @@ import com.hagag.shopsphere_ecommerce.exception.custom.UserAlreadyExistsExceptio
 import com.hagag.shopsphere_ecommerce.exception.custom.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -51,6 +52,16 @@ public class GlobalExceptionHandler {
                 .build();
     }
 
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ApiErrorResponse handleMissingRequestParam(MissingServletRequestParameterException ex) {
+        return ApiErrorResponse.builder()
+                .success(false)
+                .message("Missing Request Parameter")
+                .details(ex.getParameterName() + " is missing. it must not be blank")
+                .statusCode(HttpStatus.BAD_REQUEST.value())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
 
     @ExceptionHandler(UnauthorizedActionException.class)
     public ApiErrorResponse handleUnauthorized (UnauthorizedActionException ex) {
@@ -73,4 +84,6 @@ public class GlobalExceptionHandler {
                 .timestamp(LocalDateTime.now())
                 .build();
     }
+
+
 }
