@@ -18,5 +18,4 @@ public class ProductResponseDto {
     private Integer stockQuantity;
 
     private Long categoryId;
-
 }
