@@ -1,10 +1,12 @@
 package com.hagag.shopsphere_ecommerce.controller;
 
 import com.hagag.shopsphere_ecommerce.dto.cart.CartResponseDto;
+import com.hagag.shopsphere_ecommerce.dto.pagination.PaginatedResponseDto;
 import com.hagag.shopsphere_ecommerce.entity.Cart;
 import com.hagag.shopsphere_ecommerce.mapper.CartMapper;
 import com.hagag.shopsphere_ecommerce.service.CartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,9 +50,9 @@ public class CartController {
     }
 
     @GetMapping("/all")
-    public List<CartResponseDto> getAllCarts() {
+    public PaginatedResponseDto<CartResponseDto> getAllCarts(Pageable pageable) {
 
-        return cartService.getAllCarts();
+        return cartService.getAllCarts(pageable);
     }
 
 

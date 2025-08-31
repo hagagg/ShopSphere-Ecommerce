@@ -1,6 +1,7 @@
 package com.hagag.shopsphere_ecommerce.service.impl;
 
 import com.hagag.shopsphere_ecommerce.dto.cart.CartResponseDto;
+import com.hagag.shopsphere_ecommerce.dto.pagination.PaginatedResponseDto;
 import com.hagag.shopsphere_ecommerce.entity.Cart;
 import com.hagag.shopsphere_ecommerce.entity.User;
 import com.hagag.shopsphere_ecommerce.enums.CartStatus;
@@ -8,12 +9,15 @@ import com.hagag.shopsphere_ecommerce.enums.UserRole;
 import com.hagag.shopsphere_ecommerce.exception.custom.ResourceNotFoundException;
 import com.hagag.shopsphere_ecommerce.exception.custom.UnauthorizedActionException;
 import com.hagag.shopsphere_ecommerce.mapper.CartMapper;
+import com.hagag.shopsphere_ecommerce.mapper.PaginationMapper;
 import com.hagag.shopsphere_ecommerce.repository.CartRepo;
 import com.hagag.shopsphere_ecommerce.service.CartService;
 import com.hagag.shopsphere_ecommerce.util.SecurityUtil;
 import com.hagag.shopsphere_ecommerce.validation.AccessGuard;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,6 +31,7 @@ public class CartServiceImpl implements CartService {
     private final CartMapper cartMapper;
     private final SecurityUtil securityUtil;
     private final AccessGuard accessGuard;
+    private final PaginationMapper paginationMapper;
 
     @Override
     public Cart getOrCreateActiveCart() {
@@ -104,14 +109,13 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public List<CartResponseDto> getAllCarts() {
+    public PaginatedResponseDto<CartResponseDto> getAllCarts(Pageable pageable) {
         accessGuard.checkAdminOnly();
 
-        List<Cart> carts = cartRepo.findAll();
+        Page<Cart> carts = cartRepo.findAll(pageable);
+        Page<CartResponseDto> dtoPage = carts.map(cartMapper::toDto);
 
-        return carts.stream()
-                .map(cartMapper::toDto)
-                .collect(Collectors.toList());
+        return paginationMapper.toPaginatedResponse(dtoPage);
     }
 
 
