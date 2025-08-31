@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 public enum CartStatus {
     ACTIVE,
     ORDERED,
-    CANCELLED;
+    CANCELLED,
+    PENDING;
 
     @JsonCreator
     public static OrderStatus fromString(String value) {

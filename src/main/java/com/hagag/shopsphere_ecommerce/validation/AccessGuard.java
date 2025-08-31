@@ -13,14 +13,16 @@ public class AccessGuard {
 
     private final SecurityUtil securityUtil;
 
+    // Allow only current user
     public void checkUserOnly (User user) {
         User currentUser = securityUtil.getCurrentUser();
 
-        if (!currentUser.getId().equals(user.getId())) {
+        if (!currentUser.getId().equals(user.getId()) ) {
             throw new UnauthorizedActionException("You are not allowed to do this action");
         }
     }
 
+    // Allow current user or admin
     public void checkUserOrAdmin (User user) {
         User currentUser = securityUtil.getCurrentUser();
 
@@ -29,6 +31,7 @@ public class AccessGuard {
         }
     }
 
+    // Allow only admins
     public void checkAdminOnly () {
         User currentUser = securityUtil.getCurrentUser();
 
