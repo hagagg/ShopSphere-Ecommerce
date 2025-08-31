@@ -54,7 +54,6 @@ public class AuthServiceImpl implements AuthService {
         }
         user.setAddresses(new ArrayList<>());
         user.setOrders(new ArrayList<>());
-        user.setCartItems(new ArrayList<>());
 
         userRepo.save(user);
 

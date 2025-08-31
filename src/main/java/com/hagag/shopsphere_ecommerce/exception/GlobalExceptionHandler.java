@@ -1,9 +1,6 @@
 package com.hagag.shopsphere_ecommerce.exception;
 
-import com.hagag.shopsphere_ecommerce.exception.custom.ResourceNotFoundException;
-import com.hagag.shopsphere_ecommerce.exception.custom.UnauthorizedActionException;
-import com.hagag.shopsphere_ecommerce.exception.custom.UserAlreadyExistsException;
-import com.hagag.shopsphere_ecommerce.exception.custom.UserNotFoundException;
+import com.hagag.shopsphere_ecommerce.exception.custom.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -85,5 +82,15 @@ public class GlobalExceptionHandler {
                 .build();
     }
 
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ApiErrorResponse handleDuplicateResource (DuplicateResourceException ex){
+        return ApiErrorResponse.builder()
+                .success(false)
+                .message("Resource Already Exists")
+                .details(ex.getMessage())
+                .statusCode(HttpStatus.CONFLICT.value())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
 
 }

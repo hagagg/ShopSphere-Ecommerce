@@ -72,9 +72,6 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CartItem> cartItems = new ArrayList<>();
-
     public String getFullName() {
         return firstName + " " + lastName ;
     }
