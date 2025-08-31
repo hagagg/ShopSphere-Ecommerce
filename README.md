@@ -8,8 +8,8 @@
 erDiagram
     USERS {
         BIGINT user_id PK
-        VARCHAR username
-        VARCHAR email  
+        VARCHAR username UK
+        VARCHAR email UK
         VARCHAR password
         VARCHAR first_name
         VARCHAR last_name
@@ -49,6 +49,24 @@ erDiagram
         TIMESTAMP updated_at
     }
     
+    CARTS {
+        BIGINT cart_id PK
+        BIGINT user_id FK
+        ENUM status
+        TINYINT active_flag
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
+    
+    CART_ITEMS {
+        BIGINT cart_item_id PK
+        BIGINT cart_id FK
+        BIGINT product_id FK
+        INT quantity
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
+    }
+    
     ORDERS {
         BIGINT order_id PK
         BIGINT user_id FK
@@ -66,21 +84,18 @@ erDiagram
         DECIMAL price
         TIMESTAMP created_at
     }
-    
-    CART_ITEMS {
-        BIGINT cart_item_id PK
-        BIGINT user_id FK
-        BIGINT product_id FK
-        INT quantity
-        TIMESTAMP created_at
-        TIMESTAMP updated_at
-    }
-    
+
+    %% Relationships
     USERS ||--o{ ADDRESSES : "has"
+    USERS ||--o{ CARTS : "owns"
     USERS ||--o{ ORDERS : "places"
-    USERS ||--o{ CART_ITEMS : "has in cart"
+    
     CATEGORIES ||--o{ PRODUCTS : "contains"
-    PRODUCTS ||--o{ ORDER_ITEMS : "included in"
-    PRODUCTS ||--o{ CART_ITEMS : "added to"
+    
+    CARTS ||--o{ CART_ITEMS : "contains"
+    
+    PRODUCTS ||--o{ CART_ITEMS : "added_to"
+    PRODUCTS ||--o{ ORDER_ITEMS : "included_in"
+    
     ORDERS ||--o{ ORDER_ITEMS : "includes"
-    ADDRESSES ||--o{ ORDERS : "used for shipping"
+    ADDRESSES ||--o{ ORDERS : "ships_to"
