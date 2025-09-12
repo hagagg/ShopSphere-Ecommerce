@@ -2,7 +2,6 @@ package com.hagag.shopsphere_ecommerce.controller;
 
 import com.hagag.shopsphere_ecommerce.dto.address.AddressRequestDto;
 import com.hagag.shopsphere_ecommerce.dto.address.AddressResponseDto;
-import com.hagag.shopsphere_ecommerce.entity.Address;
 import com.hagag.shopsphere_ecommerce.service.AddressService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

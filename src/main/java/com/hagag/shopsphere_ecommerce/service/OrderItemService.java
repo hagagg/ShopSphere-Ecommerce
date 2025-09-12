@@ -5,7 +5,6 @@ import java.util.List;
 
 public interface OrderItemService {
 
-
     List<OrderItemResponseDto> getOrderItemsByOrderId(Long orderId);
 
     List<OrderItemResponseDto> getOrderItemsForCurrentUser();

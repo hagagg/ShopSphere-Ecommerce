@@ -2,6 +2,9 @@ package com.hagag.shopsphere_ecommerce.controller;
 
 import com.hagag.shopsphere_ecommerce.dto.order.OrderResponseDto;
 import com.hagag.shopsphere_ecommerce.dto.pagination.PaginatedResponseDto;
+import com.hagag.shopsphere_ecommerce.entity.Address;
+import com.hagag.shopsphere_ecommerce.entity.Cart;
+import com.hagag.shopsphere_ecommerce.entity.Order;
 import com.hagag.shopsphere_ecommerce.enums.OrderStatus;
 import com.hagag.shopsphere_ecommerce.exception.custom.BusinessException;
 import com.hagag.shopsphere_ecommerce.service.OrderService;
@@ -19,9 +22,9 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public OrderResponseDto createOrder (Long shippingAddressId) {
+    public Order createOrderFromCart (Cart cart, Address shippingAddress) {
 
-        return orderService.createOrder (shippingAddressId);
+        return orderService.createOrderFromCart (cart, shippingAddress);
     }
 
     @GetMapping("/{orderId}")

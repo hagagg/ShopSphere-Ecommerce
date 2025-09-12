@@ -3,7 +3,6 @@ package com.hagag.shopsphere_ecommerce.service.impl;
 import com.hagag.shopsphere_ecommerce.dto.order.OrderResponseDto;
 import com.hagag.shopsphere_ecommerce.dto.pagination.PaginatedResponseDto;
 import com.hagag.shopsphere_ecommerce.entity.*;
-import com.hagag.shopsphere_ecommerce.enums.CartStatus;
 import com.hagag.shopsphere_ecommerce.enums.OrderStatus;
 import com.hagag.shopsphere_ecommerce.enums.UserRole;
 import com.hagag.shopsphere_ecommerce.exception.custom.BusinessException;
@@ -13,7 +12,6 @@ import com.hagag.shopsphere_ecommerce.mapper.OrderMapper;
 import com.hagag.shopsphere_ecommerce.mapper.PaginationMapper;
 import com.hagag.shopsphere_ecommerce.repository.*;
 import com.hagag.shopsphere_ecommerce.service.OrderService;
-import com.hagag.shopsphere_ecommerce.service.ShippingService;
 import com.hagag.shopsphere_ecommerce.util.SecurityUtil;
 import com.hagag.shopsphere_ecommerce.validation.AccessGuard;
 import com.hagag.shopsphere_ecommerce.validation.OrderTransitionValidator;
@@ -26,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -40,25 +39,12 @@ public class OrderServiceImpl implements OrderService {
     private final PaginationMapper paginationMapper;
     private final UserRepo userRepo;
     private final OrderTransitionValidator orderTransitionValidator;
-    private final CartRepo cartRepo;
-    private final ShippingService shippingService;
 
     @Override
     @Transactional
-    public OrderResponseDto createOrder(Long shippingAddressId) {
-        User currentUser = securityUtil.getCurrentUser();
-
-        if (currentUser.getRole() != UserRole.CUSTOMER) {
-            throw new UnauthorizedActionException("Only customers can create orders");
-        }
-
-        Cart cart = cartRepo.findByUserAndStatus(currentUser , CartStatus.ACTIVE)
-                .orElseThrow(() -> new ResourceNotFoundException("No active cart found"));
-
-        Address shippingAddress = shippingService.resolveShippingAddress(shippingAddressId);
-
+    public Order createOrderFromCart(Cart cart, Address shippingAddress) {
         Order order = Order.builder()
-                .user(currentUser)
+                .user(cart.getUser())
                 .orderStatus(OrderStatus.PENDING)
                 .shippingAddress(shippingAddress)
                 .build();
@@ -70,19 +56,14 @@ public class OrderServiceImpl implements OrderService {
                             .quantity(cartItem.getQuantity())
                             .order(order)
                             .build()
-                ).toList();
+                ).collect(Collectors.toList());
 
         order.setOrderItems(items);
 
         BigDecimal totalAmount = orderPricingService.calculateTotal(order);
         order.setTotalAmount(totalAmount);
 
-        Order savedOrder = orderRepo.save (order);
-
-        cart.setStatus(CartStatus.ORDERED);
-        cartRepo.save(cart);
-
-        return orderMapper.toDto (savedOrder);
+        return orderRepo.save (order);
     }
 
     @Override

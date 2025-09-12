@@ -3,7 +3,6 @@ package com.hagag.shopsphere_ecommerce.mapper;
 import com.hagag.shopsphere_ecommerce.dto.authentication.RegisterRequestDto;
 import com.hagag.shopsphere_ecommerce.entity.User;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface AuthMapper {
