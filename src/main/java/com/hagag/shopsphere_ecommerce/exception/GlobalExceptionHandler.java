@@ -93,4 +93,15 @@ public class GlobalExceptionHandler {
                 .build();
     }
 
+    @ExceptionHandler(BusinessException.class)
+    public ApiErrorResponse handleBusinessException(BusinessException ex) {
+        return ApiErrorResponse.builder()
+                .success(false)
+                .message(ex.getStatus().getReasonPhrase())
+                .details(ex.getMessage())
+                .statusCode(ex.getStatus().value())
+                .timestamp(LocalDateTime.now())
+                .build();
+    }
+
 }
