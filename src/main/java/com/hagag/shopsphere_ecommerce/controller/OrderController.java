@@ -1,12 +1,10 @@
 package com.hagag.shopsphere_ecommerce.controller;
 
-import com.hagag.shopsphere_ecommerce.dto.order.OrderRequestDto;
 import com.hagag.shopsphere_ecommerce.dto.order.OrderResponseDto;
 import com.hagag.shopsphere_ecommerce.dto.pagination.PaginatedResponseDto;
 import com.hagag.shopsphere_ecommerce.enums.OrderStatus;
 import com.hagag.shopsphere_ecommerce.exception.custom.BusinessException;
 import com.hagag.shopsphere_ecommerce.service.OrderService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -21,9 +19,9 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public OrderResponseDto createOrder (@Valid @RequestBody OrderRequestDto orderRequestDto) {
+    public OrderResponseDto createOrder (Long shippingAddressId) {
 
-        return orderService.createOrder (orderRequestDto);
+        return orderService.createOrder (shippingAddressId);
     }
 
     @GetMapping("/{orderId}")

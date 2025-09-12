@@ -2,7 +2,6 @@ package com.hagag.shopsphere_ecommerce.dto.order;
 
 import com.hagag.shopsphere_ecommerce.dto.orderitem.OrderItemRequestDto;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Data;
 

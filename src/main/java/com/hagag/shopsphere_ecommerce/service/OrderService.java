@@ -1,15 +1,13 @@
 package com.hagag.shopsphere_ecommerce.service;
 
-import com.hagag.shopsphere_ecommerce.dto.order.OrderRequestDto;
 import com.hagag.shopsphere_ecommerce.dto.order.OrderResponseDto;
 import com.hagag.shopsphere_ecommerce.dto.pagination.PaginatedResponseDto;
 import com.hagag.shopsphere_ecommerce.enums.OrderStatus;
-import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
 
-    OrderResponseDto createOrder(@Valid OrderRequestDto orderRequestDto);
+    OrderResponseDto createOrder(Long shippingAddressId);
 
     OrderResponseDto getOrderById(Long orderId);
 
