@@ -47,6 +47,9 @@ public class Order {
     @JoinColumn(name = "shipping_address_id", nullable = false)
     private Address shippingAddress;
 
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Payment payment;
+
     @CreatedDate
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
