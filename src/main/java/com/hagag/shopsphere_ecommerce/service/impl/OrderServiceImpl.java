@@ -4,6 +4,7 @@ import com.hagag.shopsphere_ecommerce.dto.order.OrderResponseDto;
 import com.hagag.shopsphere_ecommerce.dto.pagination.PaginatedResponseDto;
 import com.hagag.shopsphere_ecommerce.entity.*;
 import com.hagag.shopsphere_ecommerce.enums.OrderStatus;
+import com.hagag.shopsphere_ecommerce.enums.ShipmentStatus;
 import com.hagag.shopsphere_ecommerce.enums.UserRole;
 import com.hagag.shopsphere_ecommerce.exception.custom.BusinessException;
 import com.hagag.shopsphere_ecommerce.exception.custom.ResourceNotFoundException;
@@ -13,6 +14,7 @@ import com.hagag.shopsphere_ecommerce.mapper.PaginationMapper;
 import com.hagag.shopsphere_ecommerce.repository.*;
 import com.hagag.shopsphere_ecommerce.service.InventoryService;
 import com.hagag.shopsphere_ecommerce.service.OrderService;
+import com.hagag.shopsphere_ecommerce.service.ShipmentService;
 import com.hagag.shopsphere_ecommerce.util.SecurityUtil;
 import com.hagag.shopsphere_ecommerce.validation.AccessGuard;
 import com.hagag.shopsphere_ecommerce.validation.OrderTransitionValidator;
@@ -41,6 +43,8 @@ public class OrderServiceImpl implements OrderService {
     private final PaginationMapper paginationMapper;
     private final UserRepo userRepo;
     private final OrderTransitionValidator orderTransitionValidator;
+    private final ShipmentService shippingService;
+    private final ShipmentRepo shipmentRepo;
 
     @Override
     @Transactional
@@ -118,6 +122,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public OrderResponseDto updateOrderStatus(Long orderId, OrderStatus status) {
         Order order = orderRepo.findById(orderId)
                 .orElseThrow(() -> new ResourceNotFoundException("Order not found"));
@@ -127,6 +132,25 @@ public class OrderServiceImpl implements OrderService {
         if (!orderTransitionValidator.canTransition(order.getOrderStatus(), status)) {
 
             throw new BusinessException("Invalid transition from " + order.getOrderStatus() + " to " + status , HttpStatus.BAD_REQUEST);
+        }
+
+        if (status == OrderStatus.SHIPPED) {
+            shippingService.createShipment(order);
+        }
+
+        // prevent DELIVERED if shipment not delivered
+        if (status == OrderStatus.DELIVERED) {
+            Shipment shipment = shipmentRepo.findByOrder(order)
+                    .orElseThrow(() -> new ResourceNotFoundException("No shipment found for this order"));
+
+            if (shipment.getStatus() != ShipmentStatus.DELIVERED) {
+                throw new BusinessException("Cannot mark order as DELIVERED before shipment is delivered" , HttpStatus.BAD_REQUEST);
+            }
+        }
+
+        // Prevent cancelling after shipped
+        if (status == OrderStatus.CANCELLED && order.getOrderStatus() == OrderStatus.SHIPPED) {
+            throw new BusinessException("Cannot cancel an order that has already been shipped" , HttpStatus.BAD_REQUEST);
         }
 
         order.setOrderStatus(status);

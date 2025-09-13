@@ -14,7 +14,7 @@ import com.hagag.shopsphere_ecommerce.mapper.OrderMapper;
 import com.hagag.shopsphere_ecommerce.repository.CartRepo;
 import com.hagag.shopsphere_ecommerce.service.CheckoutService;
 import com.hagag.shopsphere_ecommerce.service.OrderService;
-import com.hagag.shopsphere_ecommerce.service.ShippingService;
+import com.hagag.shopsphere_ecommerce.service.ShipmentService;
 import com.hagag.shopsphere_ecommerce.util.SecurityUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     private final SecurityUtil securityUtil;
     private final CartRepo cartRepo;
-    private final ShippingService shippingService;
+    private final ShipmentService shippingService;
     private final OrderService orderService;
     private final OrderMapper orderMapper;
 
