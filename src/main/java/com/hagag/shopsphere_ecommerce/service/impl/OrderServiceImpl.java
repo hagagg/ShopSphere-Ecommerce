@@ -11,6 +11,7 @@ import com.hagag.shopsphere_ecommerce.exception.custom.UnauthorizedActionExcepti
 import com.hagag.shopsphere_ecommerce.mapper.OrderMapper;
 import com.hagag.shopsphere_ecommerce.mapper.PaginationMapper;
 import com.hagag.shopsphere_ecommerce.repository.*;
+import com.hagag.shopsphere_ecommerce.service.InventoryService;
 import com.hagag.shopsphere_ecommerce.service.OrderService;
 import com.hagag.shopsphere_ecommerce.util.SecurityUtil;
 import com.hagag.shopsphere_ecommerce.validation.AccessGuard;
@@ -35,6 +36,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
     private final SecurityUtil securityUtil;
     private final OrderPricingServiceImpl orderPricingService;
+    private final InventoryService inventoryService;
     private final AccessGuard accessGuard;
     private final PaginationMapper paginationMapper;
     private final UserRepo userRepo;
@@ -51,12 +53,18 @@ public class OrderServiceImpl implements OrderService {
 
         List<OrderItem> items = cart.getCartItems()
                 .stream()
-                .map(cartItem ->  OrderItem.builder()
+                .map(cartItem -> {
+                    Product product = cartItem.getProduct();
+
+                    inventoryService.validateAndDeductStock(product, cartItem.getQuantity());
+
+                    return OrderItem.builder()
                             .product(cartItem.getProduct())
                             .quantity(cartItem.getQuantity())
+                            .price(product.getPrice())
                             .order(order)
-                            .build()
-                ).collect(Collectors.toList());
+                            .build();
+                }).collect(Collectors.toList());
 
         order.setOrderItems(items);
 

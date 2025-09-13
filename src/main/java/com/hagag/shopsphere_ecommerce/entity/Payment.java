@@ -27,14 +27,12 @@ public class Payment {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Size(max = 20)
     @NotNull
     @ColumnDefault("'PENDING'")
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private PaymentStatus status;
 
-    @Size(max = 20)
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(name = "method", nullable = false, length = 20)

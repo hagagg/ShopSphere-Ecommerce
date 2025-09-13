@@ -12,7 +12,6 @@ import com.hagag.shopsphere_ecommerce.exception.custom.ResourceNotFoundException
 import com.hagag.shopsphere_ecommerce.exception.custom.UnauthorizedActionException;
 import com.hagag.shopsphere_ecommerce.mapper.OrderMapper;
 import com.hagag.shopsphere_ecommerce.repository.CartRepo;
-import com.hagag.shopsphere_ecommerce.repository.OrderRepo;
 import com.hagag.shopsphere_ecommerce.service.CheckoutService;
 import com.hagag.shopsphere_ecommerce.service.OrderService;
 import com.hagag.shopsphere_ecommerce.service.ShippingService;
@@ -30,7 +29,6 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final CartRepo cartRepo;
     private final ShippingService shippingService;
     private final OrderService orderService;
-    private final OrderRepo orderRepo;
     private final OrderMapper orderMapper;
 
     @Override
@@ -52,7 +50,6 @@ public class CheckoutServiceImpl implements CheckoutService {
         Address shippingAddress = shippingService.resolveShippingAddress(shippingAddressId);
 
         Order order = orderService.createOrderFromCart(cart, shippingAddress);
-        orderRepo.save(order);
 
         cart.setStatus(CartStatus.ORDERED);
         cartRepo.save(cart);

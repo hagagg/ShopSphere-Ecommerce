@@ -9,7 +9,7 @@ public enum CartStatus {
     PENDING;
 
     @JsonCreator
-    public static OrderStatus fromString(String value) {
-        return value == null ? null : OrderStatus.valueOf(value.toUpperCase());
+    public static CartStatus fromString(String value) {
+        return value == null ? null : CartStatus.valueOf(value.toUpperCase());
     }
 }

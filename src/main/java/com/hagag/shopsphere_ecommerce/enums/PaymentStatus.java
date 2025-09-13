@@ -7,8 +7,8 @@ public enum PaymentStatus {
     PENDING, SUCCESS, FAILED, CANCELLED;
 
     @JsonCreator
-    public static OrderStatus fromString(String value) {
-        return value == null ? null : OrderStatus.valueOf(value.toUpperCase());
+    public static PaymentStatus fromString(String value) {
+        return value == null ? null : PaymentStatus.valueOf(value.toUpperCase());
     }
 
 }
