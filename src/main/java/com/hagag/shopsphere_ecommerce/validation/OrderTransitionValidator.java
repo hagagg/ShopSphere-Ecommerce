@@ -13,8 +13,7 @@ public class OrderTransitionValidator {
             OrderStatus.PENDING, EnumSet.of(OrderStatus.PAID, OrderStatus.CANCELLED),
             OrderStatus.PAID, EnumSet.of(OrderStatus.PROCESSING, OrderStatus.CANCELLED),
             OrderStatus.PROCESSING, EnumSet.of(OrderStatus.SHIPPED, OrderStatus.CANCELLED),
-            OrderStatus.SHIPPED, EnumSet.of(OrderStatus.DELIVERED),
-            OrderStatus.DELIVERED, EnumSet.noneOf(OrderStatus.class),
+            OrderStatus.SHIPPED, EnumSet.noneOf(OrderStatus.class),
             OrderStatus.CANCELLED, EnumSet.noneOf(OrderStatus.class)
     );
 

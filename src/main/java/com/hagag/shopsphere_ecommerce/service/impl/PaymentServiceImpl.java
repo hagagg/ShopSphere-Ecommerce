@@ -12,6 +12,7 @@ import com.hagag.shopsphere_ecommerce.mapper.PaymentMapper;
 import com.hagag.shopsphere_ecommerce.repository.OrderRepo;
 import com.hagag.shopsphere_ecommerce.repository.PaymentRepo;
 import com.hagag.shopsphere_ecommerce.service.PaymentService;
+import com.hagag.shopsphere_ecommerce.service.ShipmentService;
 import com.hagag.shopsphere_ecommerce.strategy.PaymentStrategy;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -32,6 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final Map<String, PaymentStrategy> strategies;
     private final PaymentRepo paymentRepo;
     private final PaymentMapper paymentMapper;
+    private final ShipmentService shipmentService;
 
 
     @Override
@@ -70,6 +72,8 @@ public class PaymentServiceImpl implements PaymentService {
         if (status.equals(PaymentStatus.SUCCESS)) {
             order.setOrderStatus(OrderStatus.PAID);
         }
+
+        shipmentService.createShipment(order);
 
         paymentRepo.save(payment);
         orderRepo.save(order);

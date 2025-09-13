@@ -18,6 +18,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -32,6 +33,7 @@ public class ProductServiceImpl implements ProductService {
     private final PaginationMapper paginationMapper;
 
     @Override
+    @Transactional
     public ProductResponseDto createProduct(ProductRequestDto productRequestDto) {
         accessGuard.checkAdminOnly();
 
@@ -65,6 +67,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductResponseDto updateProduct(Long productId, ProductRequestDto productRequestDto) {
         accessGuard.checkAdminOnly();
 

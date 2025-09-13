@@ -24,6 +24,4 @@ public interface ShipmentService {
 
     ShipmentResponseDto cancelShipment(Long shipmentId);
 
-    ShipmentResponseDto markAsReturned(Long shipmentId);
-
-    }
+}

@@ -6,6 +6,7 @@ import com.hagag.shopsphere_ecommerce.entity.Address;
 import com.hagag.shopsphere_ecommerce.entity.Order;
 import com.hagag.shopsphere_ecommerce.entity.Shipment;
 import com.hagag.shopsphere_ecommerce.entity.User;
+import com.hagag.shopsphere_ecommerce.enums.OrderStatus;
 import com.hagag.shopsphere_ecommerce.enums.ShipmentStatus;
 import com.hagag.shopsphere_ecommerce.exception.custom.BusinessException;
 import com.hagag.shopsphere_ecommerce.exception.custom.ResourceNotFoundException;
@@ -23,6 +24,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -63,6 +65,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
+    @Transactional
     public Shipment createShipment(Order order) {
 
         Shipment shipment = Shipment.builder()
@@ -77,6 +80,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
+    @Transactional
     public ShipmentResponseDto updateShipmentStatus(Long shipmentId, ShipmentStatus status) {
         accessGuard.checkAdminOnly();
 
@@ -87,15 +91,23 @@ public class ShipmentServiceImpl implements ShipmentService {
             throw new BusinessException("Invalid shipment status transition: " + shipment.getStatus() + " -> " + status , HttpStatus.BAD_REQUEST);
         }
 
-        shipment.setStatus(status);
+        // Only allow marking as returned if delivered
+        if (status == ShipmentStatus.RETURNED && shipment.getStatus() != ShipmentStatus.DELIVERED) {
+            throw new BusinessException(
+                    "Only delivered shipments can be marked as returned",
+                    HttpStatus.BAD_REQUEST
+            );
+        }
 
         if (status == ShipmentStatus.IN_TRANSIT) {
             shipment.setShippedAt(LocalDateTime.now());
+            Order order = shipment.getOrder();
+            order.setOrderStatus(OrderStatus.SHIPPED);
         } else if (status == ShipmentStatus.DELIVERED) {
             shipment.setDeliveredAt(LocalDateTime.now());
         }
 
-        shipmentRepo.save(shipment);
+        shipment.setStatus(status);
 
         return shipmentMapper.toDto(shipment);
     }
@@ -133,6 +145,7 @@ public class ShipmentServiceImpl implements ShipmentService {
     }
 
     @Override
+    @Transactional
     public ShipmentResponseDto cancelShipment(Long shipmentId) {
         accessGuard.checkAdminOnly();
 
@@ -146,23 +159,6 @@ public class ShipmentServiceImpl implements ShipmentService {
         }
 
         shipment.setStatus(ShipmentStatus.CANCELLED);
-        shipmentRepo.save(shipment);
-
-        return shipmentMapper.toDto(shipment);
-    }
-
-    public ShipmentResponseDto markAsReturned(Long shipmentId) {
-        accessGuard.checkAdminOnly();
-
-        Shipment shipment = shipmentRepo.findById(shipmentId)
-                .orElseThrow(() -> new ResourceNotFoundException("Shipment not found"));
-
-        if (shipment.getStatus() != ShipmentStatus.DELIVERED) {
-
-            throw new BusinessException("Only delivered shipments can be marked as returned", HttpStatus.BAD_REQUEST);
-        }
-
-        shipment.setStatus(ShipmentStatus.RETURNED);
         shipmentRepo.save(shipment);
 
         return shipmentMapper.toDto(shipment);

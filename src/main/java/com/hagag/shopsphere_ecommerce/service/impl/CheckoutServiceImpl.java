@@ -52,7 +52,6 @@ public class CheckoutServiceImpl implements CheckoutService {
         Order order = orderService.createOrderFromCart(cart, shippingAddress);
 
         cart.setStatus(CartStatus.ORDERED);
-        cartRepo.save(cart);
 
         return orderMapper.toDto(order);
     }

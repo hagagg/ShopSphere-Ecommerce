@@ -11,8 +11,8 @@ public class ShipmentTransitionValidator {
 
     private static final Map<ShipmentStatus, EnumSet<ShipmentStatus>> transitions = Map.of(
             ShipmentStatus.PENDING, EnumSet.of(ShipmentStatus.IN_TRANSIT, ShipmentStatus.CANCELLED),
-            ShipmentStatus.IN_TRANSIT, EnumSet.of(ShipmentStatus.DELIVERED, ShipmentStatus.RETURNED, ShipmentStatus.CANCELLED),
-            ShipmentStatus.DELIVERED, EnumSet.noneOf(ShipmentStatus.class),
+            ShipmentStatus.IN_TRANSIT, EnumSet.of(ShipmentStatus.DELIVERED, ShipmentStatus.CANCELLED),
+            ShipmentStatus.DELIVERED, EnumSet.of(ShipmentStatus.RETURNED),
             ShipmentStatus.RETURNED, EnumSet.noneOf(ShipmentStatus.class),
             ShipmentStatus.CANCELLED, EnumSet.noneOf(ShipmentStatus.class)
     );

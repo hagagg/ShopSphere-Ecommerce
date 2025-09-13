@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/shippments")
+@RequestMapping("/shipments")
 public class ShipmentController {
 
     private final ShipmentService shipmentService;
@@ -45,10 +45,5 @@ public class ShipmentController {
         return shipmentService.cancelShipment(shipmentId);
     }
 
-    @PatchMapping("/{shipmentId}/return")
-    public ShipmentResponseDto markAsReturned(@PathVariable Long shipmentId) {
-
-        return shipmentService.markAsReturned(shipmentId);
-    }
 
 }

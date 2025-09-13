@@ -82,6 +82,7 @@ public class CartItemServiceImpl implements CartItemService {
     }
 
     @Override
+    @Transactional
     public void deleteCartItem(Long cartItemId) {
         CartItem cartItem = cartItemRepo.findById(cartItemId)
                 .orElseThrow(() -> new ResourceNotFoundException("CartItem with id " + cartItemId + " not found"));
